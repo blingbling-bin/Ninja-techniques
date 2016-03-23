@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<style>
+	#results li.pass{color:green;}
+	#results li.fail{color:red;}
+</style>
+<body>
+	<ul id="results"></ul>
+</body>
+	<script>
+		// 断言函数(第一个断言)
+		function assert(value,desc){
+			// 创建一个li元素
+			var li = document.createElement("li");
+			// 给li元素类名
+			li.className = value ? "pass" : "fail";
+			// 创建一个文本节点 到li中
+			li.appendChild(document.createTextNode(desc));
+			// 将li 放入 id为results中
+			document.getElementById("results").appendChild(li);
+		}
+
+		// 窗口加载完毕后
+		window.onload = function(){
+			assert(true,"The test suite is running");
+			assert(false,"Fail!");
+		}
+	</script>
+</html>

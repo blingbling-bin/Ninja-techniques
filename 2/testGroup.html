@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>2.5测试分组的实现</title>
+	</head>
+	<style>
+		#results li.pass{color:green;}
+		#results li.fail{color:red;}
+	</style>
+	<body>
+		<ul id="results"></ul>
+	</body>
+	<script>
+		function log() {
+			try{
+				console.log.apply(console,arguments);
+			}catch(e){
+				try{
+					opera.postError.apply(opera,arguments);
+				}catch(e){
+					alert(Array.prototype.join.call(arguments,""));
+				}
+			}
+		}
+		// 测试分组的实现
+		(function () {
+			var results;
+			this.assert = function assert(value,desc) {
+				// 创建元素
+				var li = document.createElement('li');
+				// 给元素class
+				li.className = value ? "pass" : "fail";
+				// 插入文本节点
+				li.appendChild(document.createTextNode(desc));
+				// 放入results中
+				results.appendChild(li);
+				// 假如li值为false 当前创建的父的父为fail类名
+				if (!value) {
+					li.parentNode.parentNode.className = "fail";
+				}
+				// 返回li
+				return li;
+			};
+			this.test = function test(name,fn) {
+				// 获取一个ID节点
+				results = document.getElementById("results");
+				// 执行assert函数 得到li 在li中创建一个ul 在这里results的值改变 已经不是#results 而是#results > li > ul
+				results = assert(true, name).appendChild(
+					document.createElement("ul"));
+				// 执行多个assert函数 放入ul中
+				fn();
+			}
+		})();
+
+		window.onload = function () {
+			test("A test.", function(){
+				assert(true,"First assertion completed");
+				assert(true,"Second assertion completed");
+				assert(true,"Third assertion completed");
+			});
+			test("Anther test.", function(){
+				assert(true,"First test completed");
+				assert(false,"Second test completed");
+				assert(true,"Third assertion completed");
+			});
+			test("A third test.", function(){
+				assert(null,"fail");
+				assert(5,"pass");
+			});
+		}
+		// 一个主要的区别是包含results变量，该变量持有当前测试组的引用(这样可以正确插入断言)
+	</script>
+</html>
